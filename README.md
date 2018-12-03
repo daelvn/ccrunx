@@ -2,7 +2,9 @@
 Better version of the [ccrun](https://github.com/daelvn/ccrun) wrapper. This is a wrapper around CCEmuX which will let you create environments and run your projects inside CCEmuX.
 
 ## Installing
-This should be as easy as cloning this repo (`git clone https://github.com/daelvn/ccrunx.git`), making the script an executable if it isn't already (`chmod +x ./ccrunx`) and running it. It's recommendable that you put this script in your path. If you need to install CCEmuX, you can easily download it from the AUR as ccemux-git (Arch).
+This should be as easy as cloning this repo (`git clone https://github.com/daelvn/ccrunx.git`), making the script an executable if it isn't already (`chmod +x ./ccrunx`) and running it. It's recommendable that you put this script in your path. If you need to install CCEmuX, you can easily download it from the AUR as ccemux-git (Arch). This requires you to install the dependences `lrunkit` and `ltext` manually.
+
+Additionally, you can download the whole package using LuaRocks: `luarocks install ccrunx`, although you will still have to download CCEmuX.
 
 ## Usage
 First, you should configure an environment for your project.
