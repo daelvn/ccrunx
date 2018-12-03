@@ -1,0 +1,205 @@
+#!/usr/bin/env lua
+local chain, execute
+do
+  local _obj_0 = require("lrunkit")
+  chain, execute = _obj_0.chain, _obj_0.execute
+end
+local title, arrow, dart, bullet, error
+do
+  local _obj_0 = require("ltext")
+  title, arrow, dart, bullet, error = _obj_0.title, _obj_0.arrow, _obj_0.dart, _obj_0.bullet, _obj_0.error
+end
+local mkdir
+mkdir = require("lfs").mkdir
+local argparse = require("argparse")
+table.unpack = table.unpack or (unpack or function() end)
+local argl
+do
+  local _with_0 = argparse()
+  _with_0:name("ccrunx")
+  _with_0:description("Wrapper for running folders as CCEmuX computers")
+  _with_0:epilog("https://ccrunx.daelvn.ga")
+  _with_0:command_target("mode")
+  do
+    local _with_1 = _with_0:option("-v --version")
+    _with_1:description("Prints the ccrunx version")
+    _with_1:action(function()
+      return print("ccrunx 1.0")
+    end)
+  end
+  do
+    local _with_1 = _with_0:command("run r")
+    _with_1:description("Run an environment")
+    _with_1:target("run")
+    do
+      local _with_2 = _with_1:argument("folder")
+      _with_2:description("Run this folder as environment")
+      _with_2:args(1)
+    end
+    do
+      local _with_2 = _with_1:option("-i --id")
+      _with_2:description("Computer ID")
+      _with_2:default("0")
+    end
+  end
+  do
+    local _with_1 = _with_0:command("configure c")
+    _with_1:description("Configures ccrunx to run folders in this directory")
+    _with_1:target("configure")
+    do
+      local _with_2 = _with_1:argument("folder")
+      _with_2:description("Environment name")
+      _with_2:args(1)
+    end
+    do
+      local _with_2 = _with_1:option("-i --id")
+      _with_2:description("Computer ID")
+      _with_2:default("0")
+    end
+    do
+      local _with_2 = _with_1:option("-t --timeout")
+      _with_2:description("Timeout for running CCEmuX")
+      _with_2:default("5s")
+    end
+  end
+  do
+    local _with_1 = _with_0:command("attach a")
+    _with_1:description("Attach another folder to the environment")
+    _with_1:target("attach")
+    do
+      local _with_2 = _with_1:argument("environment")
+      _with_2:description("Name of the environment")
+      _with_2:args(1)
+    end
+    do
+      local _with_2 = _with_1:argument("folder")
+      _with_2:description("Folder to attach")
+      _with_2:args(1)
+    end
+  end
+  do
+    local _with_1 = _with_0:command("new n")
+    _with_1:description("Creates a new ID in an environment")
+    _with_1:target("new")
+    do
+      local _with_2 = _with_1:argument("environment")
+      _with_2:description("Name of the environment")
+      _with_2:args(1)
+    end
+    do
+      local _with_2 = _with_1:argument("id")
+      _with_2:description("ID for the computer")
+      _with_2:args(1)
+    end
+  end
+  argl = _with_0:parse()
+end
+local configure
+configure = function()
+  return (chain(table.unpack({
+    function()
+      return print(arrow("Configuring ccrunx"))
+    end,
+    function()
+      return print(dart("Creating folder .ccrunx/" .. tostring(argl.folder)))
+    end,
+    function()
+      return mkdir(".ccrunx")
+    end,
+    function()
+      return mkdir(".ccrunx/" .. tostring(argl.folder))
+    end,
+    function()
+      return print(dart("Running CCEmuX shortly to generate configuration files"))
+    end,
+    execute("timeout " .. tostring(argl.timeout) .. " ccemux -d .ccrunx/" .. tostring(argl.folder) .. " &> /dev/null"),
+    function()
+      return print(dart("Creating computer/ folder"))
+    end,
+    function()
+      return mkdir(".ccrunx/" .. tostring(argl.folder) .. "/computer")
+    end,
+    function()
+      return mkdir(".ccrunx/" .. tostring(argl.folder) .. "/computer/" .. tostring(argl.id))
+    end,
+    function()
+      return print(dart("Create attach/ folder"))
+    end,
+    function()
+      return mkdir(".ccrunx/" .. tostring(argl.folder) .. "/attach")
+    end,
+    function()
+      return print(bullet("Done!"))
+    end
+  })))()
+end
+local copy_files
+copy_files = function()
+  return (chain(table.unpack({
+    function()
+      return print(arrow("Copying files into " .. tostring(argl.id) .. ":/"))
+    end,
+    function()
+      return print(dart("Deleting old environment"))
+    end,
+    execute("rm -rf .ccrunx/" .. tostring(argl.folder) .. "/computer/" .. tostring(argl.id) .. "/*"),
+    function()
+      return print(dart("Attaching files from .ccrunx/" .. tostring(argl.folder) .. "/attach/ to .ccrunx/" .. tostring(argl.folder) .. "/computer/" .. tostring(argl.id)))
+    end,
+    execute("cp .ccrunx/" .. tostring(argl.folder) .. "/attach/* .ccrunx/" .. tostring(argl.folder) .. "/computer/" .. tostring(argl.id)),
+    function()
+      return print(dart("Copying files from " .. tostring(argl.folder) .. " to .ccrunx/" .. tostring(argl.folder) .. "/computer/" .. tostring(argl.id)))
+    end,
+    execute("cp " .. tostring(argl.folder) .. "/* .ccrunx/" .. tostring(argl.folder) .. "/computer/" .. tostring(argl.id) .. "/"),
+    function()
+      return print(bullet("Done!"))
+    end
+  })))()
+end
+local attach
+attach = function()
+  return (chain(table.unpack({
+    function()
+      return print(arrow("Attaching " .. tostring(argl.folder) .. " to environment " .. tostring(argl.environment)))
+    end,
+    function()
+      return print(dart("Copying files from " .. tostring(argl.folder) .. " to .ccrunx/" .. tostring(argl.environment) .. "/attach/"))
+    end,
+    execute("cp " .. tostring(argl.folder) .. "/* .ccrunx/" .. tostring(argl.environment) .. "/attach/"),
+    function()
+      return print(bullet("Done!"))
+    end
+  })))()
+end
+local new
+new = function()
+  return (chain(table.unpack({
+    function()
+      return print(arrow("Creating a new computer " .. tostring(argl.id) .. " in " .. tostring(argl.environment)))
+    end,
+    function()
+      return print(dart("Creating computer/" .. tostring(argl.id) .. " folder"))
+    end,
+    function()
+      return mkdir(".ccrunx/" .. tostring(argl.environment) .. "/computer/" .. tostring(argl.id))
+    end
+  })))()
+end
+local run
+run = function()
+  return (execute("ccemux -d .ccrunx/" .. tostring(argl.folder)))()
+end
+local _exp_0 = argl.mode
+if "configure" == _exp_0 then
+  return configure()
+elseif "attach" == _exp_0 then
+  return attach()
+elseif "new" == _exp_0 then
+  return new()
+elseif "run" == _exp_0 then
+  copy_files()
+  return run()
+else
+  print(error("This shouldn't be displaying. Good job!"))
+  return os.exit()
+end
