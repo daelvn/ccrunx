@@ -93,9 +93,9 @@ copy_files = ->
     -> print dart "Deleting old environment"
     execute "rm -rf .ccrunx/#{argl.folder}/computer/#{argl.id}/*"
     -> print dart "Attaching files from .ccrunx/#{argl.folder}/attach/ to .ccrunx/#{argl.folder}/computer/#{argl.id}"
-    execute "cp .ccrunx/#{argl.folder}/attach/* .ccrunx/#{argl.folder}/computer/#{argl.id}"
+    execute "cp -r .ccrunx/#{argl.folder}/attach/* .ccrunx/#{argl.folder}/computer/#{argl.id}"
     -> print dart "Copying files from #{argl.folder} to .ccrunx/#{argl.folder}/computer/#{argl.id}"
-    execute "cp #{argl.folder}/* .ccrunx/#{argl.folder}/computer/#{argl.id}/"
+    execute "cp -r #{argl.folder}/* .ccrunx/#{argl.folder}/computer/#{argl.id}/"
     -> print bullet "Done!" })!
 
 --> ## attach
@@ -104,7 +104,7 @@ attach = ->
   (chain table.unpack {
     -> print arrow "Attaching #{argl.folder} to environment #{argl.environment}"
     -> print dart "Copying files from #{argl.folder} to .ccrunx/#{argl.environment}/attach/"
-    execute "cp #{argl.folder}/* .ccrunx/#{argl.environment}/attach/"
+    execute "cp -r #{argl.folder}/* .ccrunx/#{argl.environment}/attach/"
     -> print bullet "Done!" })!
 
 --> ## new

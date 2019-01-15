@@ -1,4 +1,3 @@
-#!/usr/bin/env lua
 local chain, execute
 do
   local _obj_0 = require("lrunkit")
@@ -146,11 +145,11 @@ copy_files = function()
     function()
       return print(dart("Attaching files from .ccrunx/" .. tostring(argl.folder) .. "/attach/ to .ccrunx/" .. tostring(argl.folder) .. "/computer/" .. tostring(argl.id)))
     end,
-    execute("cp .ccrunx/" .. tostring(argl.folder) .. "/attach/* .ccrunx/" .. tostring(argl.folder) .. "/computer/" .. tostring(argl.id)),
+    execute("cp -r .ccrunx/" .. tostring(argl.folder) .. "/attach/* .ccrunx/" .. tostring(argl.folder) .. "/computer/" .. tostring(argl.id)),
     function()
       return print(dart("Copying files from " .. tostring(argl.folder) .. " to .ccrunx/" .. tostring(argl.folder) .. "/computer/" .. tostring(argl.id)))
     end,
-    execute("cp " .. tostring(argl.folder) .. "/* .ccrunx/" .. tostring(argl.folder) .. "/computer/" .. tostring(argl.id) .. "/"),
+    execute("cp -r " .. tostring(argl.folder) .. "/* .ccrunx/" .. tostring(argl.folder) .. "/computer/" .. tostring(argl.id) .. "/"),
     function()
       return print(bullet("Done!"))
     end
@@ -165,7 +164,7 @@ attach = function()
     function()
       return print(dart("Copying files from " .. tostring(argl.folder) .. " to .ccrunx/" .. tostring(argl.environment) .. "/attach/"))
     end,
-    execute("cp " .. tostring(argl.folder) .. "/* .ccrunx/" .. tostring(argl.environment) .. "/attach/"),
+    execute("cp -r " .. tostring(argl.folder) .. "/* .ccrunx/" .. tostring(argl.environment) .. "/attach/"),
     function()
       return print(bullet("Done!"))
     end
