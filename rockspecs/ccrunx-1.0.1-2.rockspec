@@ -1,5 +1,5 @@
 package = "ccrunx"
-version = "1.0.1-1"
+version = "1.0.1-2"
 source = {
    url = "https://github.com/daelvn/ccrunx",
    tag = "v1.0.1"
@@ -11,7 +11,6 @@ description = {
     computers, attach files permanently, and keep your debugging organized.
   ]],
    homepage = "https://github.com/daelvn/ccrunx",
-   license = "MIT/X11"
 }
 dependencies = {
    "lrunkit",
